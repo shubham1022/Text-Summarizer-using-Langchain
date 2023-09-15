@@ -3,13 +3,18 @@ import openai
 import streamlit as st
 from langchain import PromptTemplate
 from langchain import OpenAI
+from langchain import FewShotPromptTemplate
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
+# The code `st.set_page_config(page_title="Text Summarizer", page_icon=":robot:")` sets the title and
+# icon for the Streamlit web application. The title of the page will be "Text Summarizer" and the icon
+# displayed on the browser tab will be a robot emoji. The `st.header("Text Summarizer")` code adds a
+# header to the web application with the text "Text Summarizer".
 st.set_page_config(page_title="Text Summarizer", page_icon=":robot:")
 st.header("Text Summarizer")
 
-from langchain import FewShotPromptTemplate
+
 
 # create our examples
 examples = [
@@ -67,21 +72,25 @@ def load_llm():
     return llm
 
 llm = load_llm()
-
-
 st.markdown("#### Enter Your Text To Convert")
 
 
 def get_text():
+    """
+    The function `get_text()` returns the text entered in a text area.
+    :return: The function `get_text()` returns the value of the `input_text` variable, which is the text
+    entered by the user in the text area.
+    """
     input_text = st.text_area(label="",placeholder="your text...", key="text")
-
-
     return input_text 
 
 summary_input = get_text()
-
 st.markdown("#### Summary")
 
+
+# The code is checking if there is any input in the `summary_input` variable. If there is, it formats
+# the input using the `few_shot_prompt_template` and passes it to the language model (`llm`) to
+# generate a summary. The generated summary is then displayed using `st.write(formatted_summary)`.
 if summary_input:
     prompt_summary = few_shot_prompt_template.format(query=summary_input)   
     formatted_summary = llm(prompt_summary)
